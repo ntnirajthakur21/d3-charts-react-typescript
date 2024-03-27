@@ -1,10 +1,15 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import * as d3 from "d3";
+import React from "react";
+import BarChart from "./charts/BarChart";
 import ExpenseLineChart from "./charts/ExpenseLineChart";
 
 const HomePage = () => {
-  return <ExpenseLineChart />;
+  return (
+    <>
+      <ExpenseLineChart />
+      <BarChart />
+    </>
+  );
 };
 
 export default HomePage;
