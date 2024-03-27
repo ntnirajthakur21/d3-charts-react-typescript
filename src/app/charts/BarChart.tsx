@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import * as d3 from "d3";
 import expenses from "../data/expenses.data";
 import { shortMonth } from "@/utils/date";
