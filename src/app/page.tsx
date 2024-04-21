@@ -1,13 +1,11 @@
 "use client";
 import React from "react";
-import BarChart from "./charts/BarChart";
-import ExpenseLineChart from "./charts/ExpenseLineChart";
+import PieChart from "./components/PieChart";
 
 const HomePage = () => {
   return (
     <>
-      <ExpenseLineChart />
-      <BarChart />
+      <PieChart />
     </>
   );
 };
