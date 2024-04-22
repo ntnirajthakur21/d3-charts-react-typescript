@@ -1,39 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { csv, max, scaleBand, scaleLinear } from "d3";
-import type { DSVParsedArray } from "d3";
-
-const csvUrl =
-  "https://gist.githubusercontent.com/vivek2606/58b964b3fcd82a741c6d8be06ff3fc64/raw/UN_population.csv";
+import React from "react";
+import { max, scaleBand, scaleLinear } from "d3";
+import useUNPopulationData from "../hooks/useUNPopulationData";
+import useCursorPosition from "../hooks/useCursorPosition";
+import AxisBottom from "./common/AxisBottom";
+import AxisLeft from "./common/AxisLeft";
 
 const width = 1600;
 const height = 5000;
 
-const margin = { top: 20, right: 20, bottom: 20, left: 100 };
+const margin = { top: 20, right: 20, bottom: 20, left: 300 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 
-const row = (d: any) => {
-  d.Population = +d["2020"];
-  return d;
-};
-
 const UNPopulatinBarChart = () => {
-  const [data, setData] = useState<DSVParsedArray<any> | null>(null);
+  const { data } = useUNPopulationData();
 
-  const [cursorPosition, setCursorPosition] = React.useState<{
-    x: number;
-    y: number;
-    data?: {
-      country: string;
-      population: number;
-    };
-  } | null>(null);
-
-  useEffect(() => {
-    csv(csvUrl, row).then((data) => {
-      setData(data as DSVParsedArray<any>);
-    });
-  }, []);
+  const { cursorPosition, handler } = useCursorPosition<{
+    country: string;
+    population: number;
+  }>();
 
   const yScale = scaleBand()
     .domain(data?.map((d) => d.Country) || [])
@@ -52,37 +37,10 @@ const UNPopulatinBarChart = () => {
           transform={`translate(${margin.left}, ${margin.top})`}
           style={{ border: "1px solid black" }}
         >
-          {xScale.ticks().map((tickValue) => (
-            <g
-              className="tick"
-              transform={`translate(${xScale(tickValue)}, 0)`}
-              key={tickValue}
-            >
-              <line stroke="black" y2={innerHeight} />
-              <text
-                style={{ textAnchor: "middle" }}
-                dy=".71em"
-                x={xScale(tickValue) || 0}
-                y={innerHeight + 3}
-              >
-                {tickValue}
-              </text>
-            </g>
-          ))}
+          <AxisBottom xScale={xScale} />
 
-          {yScale.domain().map((tickValue, i) => {
-            return (
-              <text
-                key={i}
-                x={-10}
-                y={(yScale(tickValue) || 0) + yScale.bandwidth() / 2}
-                dy="0.32em"
-                style={{ textAnchor: "end" }}
-              >
-                {tickValue}
-              </text>
-            );
-          })}
+          <AxisLeft yScale={yScale} />
+
           {data?.map((d, i) => {
             return (
               <rect
@@ -92,29 +50,10 @@ const UNPopulatinBarChart = () => {
                 width={xScale(d.Population) || 0}
                 height={yScale.bandwidth() || 0}
                 fill="steelblue"
-                onMouseEnter={(e) => {
-                  setCursorPosition({
-                    x: e.pageX,
-                    y: e.pageY,
-                    data: {
-                      country: d.Country,
-                      population: d.Population,
-                    },
-                  });
-                }}
-                onMouseMove={(e) => {
-                  setCursorPosition({
-                    x: e.pageX + 10,
-                    y: e.pageY + 10,
-                    data: {
-                      country: d.Country,
-                      population: d.Population,
-                    },
-                  });
-                }}
-                onMouseLeave={(e) => {
-                  setCursorPosition(null);
-                }}
+                {...handler({
+                  country: d.Country,
+                  population: d.Population,
+                })}
               />
             );
           })}
