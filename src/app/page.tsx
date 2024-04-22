@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import IrisFlowerScatterChart from "./charts/IrisFlowerScatterChart";
+import PayoneerSpent from "./charts/PayoneerSpent";
 
 const HomePage = () => {
   return (
     <>
-      <IrisFlowerScatterChart />
+      <PayoneerSpent />
     </>
   );
 };
