@@ -26,11 +26,11 @@ const useCursorPosition = <T>() => {
 
   const handler = (data: T) => {
     return {
-      onMouseEnter: (event: React.MouseEvent<SVGRectElement, MouseEvent>) => {
+      onMouseEnter: (event: React.MouseEvent<SVGElement, MouseEvent>) => {
         const { pageX, pageY } = event;
         setCursorPosition({ x: pageX, y: pageY, data });
       },
-      onMouseMove: (event: React.MouseEvent<SVGRectElement, MouseEvent>) => {
+      onMouseMove: (event: React.MouseEvent<SVGElement, MouseEvent>) => {
         const { pageX, pageY } = event;
         setCursorPosition({ x: pageX + 10, y: pageY + 10, data });
       },
