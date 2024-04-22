@@ -1,4 +1,13 @@
-import { csv, format, max, rollup, scaleBand, scaleLinear, sum } from "d3";
+import {
+  csv,
+  format,
+  line,
+  max,
+  rollup,
+  scaleBand,
+  scaleLinear,
+  sum,
+} from "d3";
 import type { DSVParsedArray } from "d3";
 import React, { useEffect } from "react";
 import AxisBottom from "../components/common/AxisBottom";
@@ -73,6 +82,10 @@ const PayoneerSpent = () => {
     .domain([0, max(data || [], (d) => d.Amount) || 0] as [number, number])
     .range([0, innerWidth]);
 
+  const linePath = line<Datum>()
+    .x((d) => xScale(d.Amount))
+    .y((d) => yScale(d.Date)! + yScale.bandwidth() / 2);
+
   const currencyFormat = format("$,.2r");
 
   if (!data) return <div>Loading...</div>;
@@ -81,6 +94,10 @@ const PayoneerSpent = () => {
     <>
       <svg width={width} height={height}>
         <g transform={`translate(${margin.left},${margin.top})`}>
+          <AxisLeft yScale={yScale} />
+
+          <AxisBottom xScale={xScale} innerHeight={innerHeight} />
+
           {data.map((d, i) => (
             <rect
               key={i}
@@ -96,9 +113,12 @@ const PayoneerSpent = () => {
             />
           ))}
 
-          <AxisLeft yScale={yScale} />
-
-          <AxisBottom xScale={xScale} innerHeight={innerHeight} />
+          <path
+            d={linePath(data) || ""}
+            fill="none"
+            stroke="black"
+            strokeWidth="2"
+          />
         </g>
       </svg>
       <div style={tooltipStyle}>
