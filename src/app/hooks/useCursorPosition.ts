@@ -40,7 +40,18 @@ const useCursorPosition = <T>() => {
     };
   };
 
-  return { cursorPosition, handler };
+  const tooltipStyle: React.CSSProperties = {
+    position: "absolute",
+    left: cursorPosition?.x,
+    top: cursorPosition?.y,
+    backgroundColor: "white",
+    padding: "5px",
+    border: "1px solid black",
+    borderRadius: "5px",
+    display: cursorPosition ? "block" : "none",
+  };
+
+  return { cursorPosition, tooltipStyle, handler };
 };
 
 export default useCursorPosition;

@@ -15,7 +15,7 @@ const innerHeight = height - margin.top - margin.bottom;
 const UNPopulatinBarChart = () => {
   const { data } = useUNPopulationData();
 
-  const { cursorPosition, handler } = useCursorPosition<{
+  const { cursorPosition, tooltipStyle, handler } = useCursorPosition<{
     country: string;
     population: number;
   }>();
@@ -37,7 +37,7 @@ const UNPopulatinBarChart = () => {
           transform={`translate(${margin.left}, ${margin.top})`}
           style={{ border: "1px solid black" }}
         >
-          <AxisBottom xScale={xScale} />
+          <AxisBottom xScale={xScale} innerHeight={innerHeight} />
 
           <AxisLeft yScale={yScale} />
 
@@ -60,18 +60,7 @@ const UNPopulatinBarChart = () => {
         </g>
       </svg>
 
-      <div
-        style={{
-          position: "absolute",
-          left: cursorPosition?.x,
-          top: cursorPosition?.y,
-          backgroundColor: "white",
-          padding: "5px",
-          border: "1px solid black",
-          borderRadius: "5px",
-          display: cursorPosition ? "block" : "none",
-        }}
-      >
+      <div style={tooltipStyle}>
         {cursorPosition?.data?.country}: {cursorPosition?.data?.population}
       </div>
     </>
