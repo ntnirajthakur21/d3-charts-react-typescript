@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import UNPopulatinBarChart from "./components/UNPopulatinBarChart";
+import IrisFlowerScatterChart from "./charts/IrisFlowerScatterChart";
 
 const HomePage = () => {
   return (
     <>
-      <UNPopulatinBarChart />
+      <IrisFlowerScatterChart />
     </>
   );
 };
