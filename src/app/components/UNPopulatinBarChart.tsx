@@ -5,7 +5,7 @@ import type { DSVParsedArray } from "d3";
 const csvUrl =
   "https://gist.githubusercontent.com/vivek2606/58b964b3fcd82a741c6d8be06ff3fc64/raw/UN_population.csv";
 
-const width = 960;
+const width = 1600;
 const height = 5000;
 
 const margin = { top: 20, right: 20, bottom: 20, left: 100 };
@@ -19,6 +19,15 @@ const row = (d: any) => {
 
 const UNPopulatinBarChart = () => {
   const [data, setData] = useState<DSVParsedArray<any> | null>(null);
+
+  const [cursorPosition, setCursorPosition] = React.useState<{
+    x: number;
+    y: number;
+    data?: {
+      country: string;
+      population: number;
+    };
+  } | null>(null);
 
   useEffect(() => {
     csv(csvUrl, row).then((data) => {
@@ -37,56 +46,96 @@ const UNPopulatinBarChart = () => {
   if (!data) return <div>Loading...</div>;
 
   return (
-    <svg width={width} height={height}>
-      <g
-        transform={`translate(${margin.left}, ${margin.top})`}
-        style={{ border: "1px solid black" }}
-      >
-        {xScale.ticks().map((tickValue) => (
-          <g
-            className="tick"
-            transform={`translate(${xScale(tickValue)}, 0)`}
-            key={tickValue}
-          >
-            <line stroke="black" y2={innerHeight} />
-            <text
-              style={{ textAnchor: "middle" }}
-              dy=".71em"
-              x={xScale(tickValue) || 0}
-              y={innerHeight + 3}
+    <>
+      <svg width={width} height={height}>
+        <g
+          transform={`translate(${margin.left}, ${margin.top})`}
+          style={{ border: "1px solid black" }}
+        >
+          {xScale.ticks().map((tickValue) => (
+            <g
+              className="tick"
+              transform={`translate(${xScale(tickValue)}, 0)`}
+              key={tickValue}
             >
-              {tickValue}
-            </text>
-          </g>
-        ))}
+              <line stroke="black" y2={innerHeight} />
+              <text
+                style={{ textAnchor: "middle" }}
+                dy=".71em"
+                x={xScale(tickValue) || 0}
+                y={innerHeight + 3}
+              >
+                {tickValue}
+              </text>
+            </g>
+          ))}
 
-        {yScale.domain().map((tickValue, i) => {
-          return (
-            <text
-              key={i}
-              x={-10}
-              y={(yScale(tickValue) || 0) + yScale.bandwidth() / 2}
-              dy="0.32em"
-              style={{ textAnchor: "end" }}
-            >
-              {tickValue}
-            </text>
-          );
-        })}
-        {data?.map((d, i) => {
-          return (
-            <rect
-              key={i}
-              x={0}
-              y={yScale(d.Country) || 0}
-              width={xScale(d.Population) || 0}
-              height={yScale.bandwidth() || 0}
-              fill="steelblue"
-            />
-          );
-        })}
-      </g>
-    </svg>
+          {yScale.domain().map((tickValue, i) => {
+            return (
+              <text
+                key={i}
+                x={-10}
+                y={(yScale(tickValue) || 0) + yScale.bandwidth() / 2}
+                dy="0.32em"
+                style={{ textAnchor: "end" }}
+              >
+                {tickValue}
+              </text>
+            );
+          })}
+          {data?.map((d, i) => {
+            return (
+              <rect
+                key={i}
+                x={0}
+                y={yScale(d.Country) || 0}
+                width={xScale(d.Population) || 0}
+                height={yScale.bandwidth() || 0}
+                fill="steelblue"
+                onMouseEnter={(e) => {
+                  setCursorPosition({
+                    x: e.pageX,
+                    y: e.pageY,
+                    data: {
+                      country: d.Country,
+                      population: d.Population,
+                    },
+                  });
+                }}
+                onMouseMove={(e) => {
+                  setCursorPosition({
+                    x: e.pageX + 10,
+                    y: e.pageY + 10,
+                    data: {
+                      country: d.Country,
+                      population: d.Population,
+                    },
+                  });
+                }}
+                onMouseLeave={(e) => {
+                  setCursorPosition(null);
+                }}
+              />
+            );
+          })}
+        </g>
+      </svg>
+
+      <div
+        style={{
+          position: "absolute",
+          left: cursorPosition?.x,
+          top: cursorPosition?.y,
+          backgroundColor: "white",
+          padding: "5px",
+          border: "1px solid black",
+          borderRadius: "5px",
+          display: cursorPosition ? "block" : "none",
+        }}
+      >
+        {cursorPosition?.data?.country}: {cursorPosition?.data?.population}
+      </div>
+    </>
   );
 };
 
