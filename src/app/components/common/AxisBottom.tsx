@@ -1,4 +1,5 @@
 import type { ScaleLinear } from "d3";
+import { format } from "d3";
 
 const AxisBottom = ({
   xScale,
@@ -20,7 +21,7 @@ const AxisBottom = ({
         x={xScale(tickValue) || 0}
         y={innerHeight + 3}
       >
-        {tickValue}
+        {format(".2s")(tickValue).replace("G", "B")}
       </text>
     </g>
   ));

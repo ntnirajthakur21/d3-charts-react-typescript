@@ -22,7 +22,8 @@ const UNPopulatinBarChart = () => {
 
   const yScale = scaleBand()
     .domain(data?.map((d) => d.Country) || [])
-    .range([0, innerHeight]); // The range is the pixel range of the output. syntax: range([start, end]) where start is the minimum value and end is the maximum value.
+    .range([0, innerHeight]) // The range is the pixel range of the output. syntax: range([start, end]) where start is the minimum value and end is the maximum value.
+    .paddingInner(0.1); // paddingInner is the space between the bars.
 
   const xScale = scaleLinear()
     .domain([0, max(data || [], (d) => d.Population) || 0])
