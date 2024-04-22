@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import PieChart from "./components/PieChart";
+import UNPopulatinBarChart from "./components/UNPopulatinBarChart";
 
 const HomePage = () => {
   return (
     <>
-      <PieChart />
+      <UNPopulatinBarChart />
     </>
   );
 };
