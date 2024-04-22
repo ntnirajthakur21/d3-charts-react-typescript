@@ -15,12 +15,7 @@ const AxisBottom = ({
       key={tickValue}
     >
       <line stroke="black" y2={innerHeight} />
-      <text
-        style={{ textAnchor: "middle" }}
-        dy=".71em"
-        x={xScale(tickValue) || 0}
-        y={innerHeight + 3}
-      >
+      <text style={{ textAnchor: "middle" }} dy=".71em" y={innerHeight + 3}>
         {format(".2s")(tickValue).replace("G", "B")}
       </text>
     </g>
