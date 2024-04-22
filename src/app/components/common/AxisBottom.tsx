@@ -2,8 +2,10 @@ import type { ScaleLinear } from "d3";
 
 const AxisBottom = ({
   xScale,
+  innerHeight,
 }: {
   xScale: ScaleLinear<number, number, never>;
+  innerHeight: number;
 }) => {
   return xScale.ticks().map((tickValue: number) => (
     <g
